@@ -15,6 +15,19 @@ libavutil:     2017-10-21
 
 API changes, most recent first:
 
+2021-03-04 - xxxxxxxxxx - lavc 58.128.101 - avcodec.h
+  Enable err_recognition to be set for encoders.
+
+2021-03-03 - xxxxxxxxxx - lavf 58.70.100 - avformat.h
+  Deprecate AVFMT_FLAG_PRIV_OPT. It will do nothing
+  as soon as av_demuxer_open() is removed.
+
+2021-02-27 - xxxxxxxxxx - lavc 58.126.100 - avcodec.h
+  Deprecated avcodec_get_frame_class().
+
+2021-02-21 - xxxxxxxxxx - lavu 56.66.100 - tx.h
+  Add enum AVTXFlags and AVTXFlags.AV_TX_INPLACE
+
 2021-02-14 - xxxxxxxxxx - lavd 58.12.100 - avdevice.h
   Deprecated avdevice_capabilities_create() and
   avdevice_capabilities_free().

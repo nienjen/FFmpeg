@@ -392,6 +392,7 @@ FF_ENABLE_DEPRECATION_WARNINGS
 /************************************************************/
 /* input media file */
 
+#if FF_API_DEMUXER_OPEN
 int av_demuxer_open(AVFormatContext *ic) {
     int err;
 
@@ -411,7 +412,7 @@ int av_demuxer_open(AVFormatContext *ic) {
 
     return 0;
 }
-
+#endif
 /* Open input file and probe the format if necessary. */
 static int init_input(AVFormatContext *s, const char *filename,
                       AVDictionary **options)
@@ -594,8 +595,11 @@ FF_ENABLE_DEPRECATION_WARNINGS
     if (s->pb)
         ff_id3v2_read_dict(s->pb, &s->internal->id3v2_meta, ID3v2_DEFAULT_MAGIC, &id3v2_extra_meta);
 
-
+#if FF_API_DEMUXER_OPEN
     if (!(s->flags&AVFMT_FLAG_PRIV_OPT) && s->iformat->read_header)
+#else
+    if (s->iformat->read_header)
+#endif
         if ((ret = s->iformat->read_header(s)) < 0)
             goto fail;
 
@@ -624,7 +628,11 @@ FF_ENABLE_DEPRECATION_WARNINGS
     if ((ret = avformat_queue_attached_pictures(s)) < 0)
         goto close;
 
+#if FF_API_DEMUXER_OPEN
     if (!(s->flags&AVFMT_FLAG_PRIV_OPT) && s->pb && !s->internal->data_offset)
+#else
+    if (s->pb && !s->internal->data_offset)
+#endif
         s->internal->data_offset = avio_tell(s->pb);
 
     s->internal->raw_packet_buffer_remaining_size = RAW_PACKET_BUFFER_SIZE;
@@ -4131,7 +4139,6 @@ FF_DISABLE_DEPRECATION_WARNINGS
         if (ret < 0)
             goto find_stream_info_err;
 
-#if FF_API_LOWRES
         // The old API (AVStream.codec) "requires" the resolution to be adjusted
         // by the lowres factor.
         if (st->internal->avctx->lowres && st->internal->avctx->width) {
@@ -4139,7 +4146,6 @@ FF_DISABLE_DEPRECATION_WARNINGS
             st->codec->width = st->internal->avctx->width;
             st->codec->height = st->internal->avctx->height;
         }
-#endif
 
         if (st->codec->codec_tag != MKTAG('t','m','c','d')) {
             st->codec->time_base = st->internal->avctx->time_base;
