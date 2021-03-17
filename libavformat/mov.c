@@ -1279,6 +1279,10 @@ static int64_t get_frag_time(MOVFragmentIndex *frag_index,
 
     if (track_id >= 0) {
         frag_stream_info = get_frag_stream_info(frag_index, index, track_id);
+        if (frag_stream_info->sidx_pts != AV_NOPTS_VALUE)
+            return frag_stream_info->sidx_pts;
+        if (frag_stream_info->first_tfra_pts != AV_NOPTS_VALUE)
+            return frag_stream_info->first_tfra_pts;
         return frag_stream_info->sidx_pts;
     }
 
@@ -6375,7 +6379,8 @@ static int mov_read_pssh(MOVContext *c, AVIOContext *pb, MOVAtom atom)
     AVStream *st;
     uint8_t *side_data, *extra_data, *old_side_data;
     size_t side_data_size;
-    int ret = 0, old_side_data_size;
+    buffer_size_t old_side_data_size;
+    int ret = 0;
     unsigned int version, kid_count, extra_data_size, alloc_size = 0;
 
     if (c->fc->nb_streams < 1)

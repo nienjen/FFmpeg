@@ -43,9 +43,11 @@
  */
 #define AV_CODEC_CAP_DRAW_HORIZ_BAND     (1 <<  0)
 /**
- * Codec uses get_buffer() for allocating buffers and supports custom allocators.
- * If not set, it might not use get_buffer() at all or use operations that
- * assume the buffer was allocated by avcodec_default_get_buffer.
+ * Codec uses get_buffer() or get_encode_buffer() for allocating buffers and
+ * supports custom allocators.
+ * If not set, it might not use get_buffer() or get_encode_buffer() at all, or
+ * use operations that assume the buffer was allocated by
+ * avcodec_default_get_buffer2 or avcodec_default_get_encode_buffer.
  */
 #define AV_CODEC_CAP_DR1                 (1 <<  1)
 #define AV_CODEC_CAP_TRUNCATED           (1 <<  3)
@@ -113,9 +115,14 @@
  */
 #define AV_CODEC_CAP_PARAM_CHANGE        (1 << 14)
 /**
- * Codec supports avctx->thread_count == 0 (auto).
+ * Codec supports multithreading through a method other than slice- or
+ * frame-level multithreading. Typically this marks wrappers around
+ * multithreading-capable external libraries.
  */
-#define AV_CODEC_CAP_AUTO_THREADS        (1 << 15)
+#define AV_CODEC_CAP_OTHER_THREADS       (1 << 15)
+#if FF_API_AUTO_THREADS
+#define AV_CODEC_CAP_AUTO_THREADS        AV_CODEC_CAP_OTHER_THREADS
+#endif
 /**
  * Audio encoder supports receiving a different number of samples in each call.
  */
