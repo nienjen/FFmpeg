@@ -2290,6 +2290,7 @@ TOOLCHAIN_FEATURES="
 
 TYPES_LIST="
     kCMVideoCodecType_HEVC
+    kCMVideoCodecType_HEVCWithAlpha
     kCVPixelFormatType_420YpCbCr10BiPlanarVideoRange
     kCVImageBufferTransferFunction_SMPTE_ST_2084_PQ
     kCVImageBufferTransferFunction_ITU_R_2100_HLG
@@ -3363,6 +3364,7 @@ opus_muxer_select="ogg_muxer"
 psp_muxer_select="mov_muxer"
 rtp_demuxer_select="sdp_demuxer"
 rtp_muxer_select="golomb jpegtables"
+rtp_mpegts_muxer_select="mpegts_muxer rtp_muxer"
 rtpdec_select="asf_demuxer jpegtables mov_demuxer mpegts_demuxer rm_demuxer rtp_protocol srtp"
 rtsp_demuxer_select="http_protocol rtpdec"
 rtsp_muxer_select="rtp_muxer http_protocol rtp_protocol rtpenc_chain"
@@ -6215,6 +6217,7 @@ enabled avfoundation && {
 enabled videotoolbox && {
     check_lib coreservices CoreServices/CoreServices.h UTGetOSTypeFromString "-framework CoreServices"
     check_func_headers CoreMedia/CMFormatDescription.h kCMVideoCodecType_HEVC "-framework CoreMedia"
+    check_func_headers CoreMedia/CMFormatDescription.h kCMVideoCodecType_HEVCWithAlpha "-framework CoreMedia"
     check_func_headers CoreVideo/CVPixelBuffer.h kCVPixelFormatType_420YpCbCr10BiPlanarVideoRange "-framework CoreVideo"
     check_func_headers CoreVideo/CVImageBuffer.h kCVImageBufferTransferFunction_SMPTE_ST_2084_PQ "-framework CoreVideo"
     check_func_headers CoreVideo/CVImageBuffer.h kCVImageBufferTransferFunction_ITU_R_2100_HLG "-framework CoreVideo"
